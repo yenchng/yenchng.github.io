@@ -308,10 +308,16 @@ h1, h2, h3, h4, h5, h6, figure {
 
 .fh5co-bg-dark {
   background: #FF9000;
-  background: #5f3992;
-}
+  }
 .fh5co-bg-dark .fh5co-heading h2 {
   color: #fff !important;
+}
+
+.fh5co-bg-light {
+  background: #ffffff;
+  }
+.fh5co-bg-light .fh5co-heading h2 {
+  color: #000 !important;
 }
 
 .info {
