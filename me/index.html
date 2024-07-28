@@ -1,1 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yen Chng - Digital Name Card</title>
+    <style>
+		:root {
+			--main-text-color: #333; /* Default text color */
+			--secondary-text-color: #666; /* Secondary text color */
+		}
+		h1 {
+			font-family: "Titillium Web", sans-serif;
+			font-weight: 700;
+			font-style: normal;
+			color: var(--secondary-text-color); /* Use secondary text color */
+            font-size: 1.8em;
+            margin: 10px 0;
+		}
+		
+		h2 {
+			font-family: "Titillium Web", sans-serif;
+			font-weight: 500;
+			font-style: normal;
+			color: var(--secondary-text-color); /* Use secondary text color */
+            font-size: 1.3em;
+			padding: 0;
+		}
+		
+        body {
+            font-family: "Titillium Web", sans-serif;
+			font-weight: 400;
+			font-style: normal;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden; /* Prevents scrolling */
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, #4cddc0, #2a85fd);
+            color: var(--main-text-color); /* Use main text color */
+        }
+        .poster {
+            position: relative;
+            width: 100%;
+            height: 25%; /* Cap Poster Height */
+            min-height: 25%;
+            background: url('poster.jpg') no-repeat center center;
+            background-size: cover; /* Scale/Zoom the image */
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.5); /* Adjust transparency here */
+        }
+        .card-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 60%; /* Body Height */
+            min-height: 65%;
+			max-height: 65%;
+			perspective: 1000px; /* Add perspective to the card container */
+        }
+        .card {
+			z-index: 0;
 
+            background: #fff;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%;
+			height: 100%;
+            margin-top: -50px; /* Adjust for overlapping poster */
+			position: relative; /* For absolute positioning of the button */
+			transform-style: preserve-3d;
+			transition: transform 0.6s;
+        }
+		
+		.card.flip {
+			transform: rotateY(180deg);
+		}
+
+		.card .back {
+			transform: rotateY(180deg);
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+			align-items: center;
+			background: #fff;
+			backface-visibility: hidden;
+			padding-bottom: 20px; /* Add some padding at the bottom */
+		}
+
+
+		
+		.front.onflip {
+			padding: 0;
+			margin: 0;
+			display: none;
+		}
+
+		.card .back {
+			transform: rotateY(180deg);
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+			align-items: center;
+			background: #fff;
+			backface-visibility: hidden;
+			padding-bottom: 20px; /* Add some padding at the bottom */
+		}
+
+		.qr-code-container {
+			flex-grow: 1; /* Allow the QR code container to grow and fill the space */
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+			padding: 20px 0; /* Add padding to the top and bottom */
+			box-sizing: border-box;
+		}
+
+		.qr-code {
+			max-width: 80%; /* Ensure the QR code image is responsive */
+			max-height: 80%; /* Ensure the QR code image is responsive */
+			width: 100%;
+			height: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.qr-code img {
+			max-width: 100%;
+			max-height: 100%;
+			object-fit: contain; /* Ensure the QR code maintains its aspect ratio */
+		}
+
+		
+        .profile-pic {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border: 5px solid #fff;
+			margin-top: -80px; /* Move upwards by 50px more */
+        }
+        .info {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+			padding-left: 20px;
+			padding-right: 20px;
+        }
+        .info svg {
+            width: 24px;
+            height: 24px;
+            margin-right: 20px;
+        }
+        .info div {
+            text-align: left;
+        }
+        .linkedin {
+            margin-top: 20px;
+            text-align: left;
+        }
+        .linkedin a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #0077b5;
+            font-weight: bold;
+        }
+        .linkedin img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+		.contact-image {
+			position: absolute; /* Position the image absolutely within the .card container */
+			bottom: 20px; /* Adjust as needed to fit within the container */
+			left: 50%;
+			transform: translateX(-50%); /* Center the image horizontally */
+			width: 100%;
+			max-width: 300px; /* Set max width for the button image */
+			cursor: pointer;
+		}
+        .footer {
+            height: 20%; /* Footer Height */
+            min-height: 20%;
+            text-align: center;
+            padding: 0px;
+            color: #fff;
+            font-size: 0.8em; /* Smaller font size for footer */
+        }
+		a {
+			color: inherit; /* Inherit color from the parent element */
+		}
+		
+		a:hover,
+		a:focus,
+		a:active {
+			text-decoration: none !important; /* Optionally add underline on hover */
+		}
+		
+		a.info-link {
+			text-decoration: none !important; /* Remove underline */
+			color: inherit; /* Inherit color from the parent element */
+		}
+
+		a.info-link:hover,
+		a.info-link:focus,
+		a.info-link:active {
+			text-decoration: none !important; /* Optionally add underline on hover */
+		}
+		
+		.info-container {
+			display: flex;
+			flex-direction: column; /* Default to column layout */
+			gap: 20px; /* Space between items */
+		}
+		
+		.button-container {
+			position: absolute;
+			bottom: 20px;
+			left: 50%;
+			transform: translateX(-50%);
+			display: flex;
+			flex-direction: column;
+			gap: 10px; /* Space between buttons */
+			width: 100%;
+			align-items: center;
+		}
+
+		.linkedin-btn, .contact-btn {
+			display: flex;
+			align-items: center;
+			background-color: #0077b5;
+			color: #fff;
+			padding: 10px 20px;
+			border-radius: 5px;
+			text-decoration: none;
+			font-weight: bold;
+			width: 200px; /* Fixed width */
+			justify-content: center; /* Center the content within the button */
+		}
+
+		.linkedin-btn svg, .contact-btn svg {
+			margin-right: 10px;
+		}
+
+
+
+		@media (min-width: 768px) { /* Adjust the breakpoint as needed */
+			.info-container {
+				flex-direction: row; /* Switch to row layout on larger screens */
+				justify-content: center; /* Distribute space around the items */
+				align-items: center; /* Center items vertically */
+			}
+
+			.info {
+				flex: 1; /* Allow each item to grow equally */
+			}
+
+			.info-link {
+				width: 100%; /* Ensure links take full width */
+				display: flex; /* Use flex for internal layout */
+				align-items: center; /* Center items vertically */
+			}
+
+			.info-link div {
+				margin-left: 10px; /* Space between icon and text */
+			}
+			
+			h1 {
+                font-size: 2em; /* Increase font size for larger screens */
+				margin-top: 0px;
+				margin-bottom: 0px;
+            }
+			h2 {
+                font-size: 1.2em; /* Increase font size for larger screens */
+				margin-top: 0px;
+				margin-bottom: 20px;
+            }
+		}
+		
+		
+		
+		
+
+    </style>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
+	
+</head>
+<body>
+    <div class="poster">
+        <div class="overlay"></div>
+    </div>
+    <div class="card-container">
+        <div class="card">
+			<div class="front">
+			<img src="images/user-3.jpg" alt="Profile Picture" class="profile-pic">
+			<h1>Yen CHNG</h1>
+			<h2>IT Manager Consumers MY</h2>
+				<div class="info-container">
+					<div class="info">
+						<a href="mailto:Yen.Chng@pmi.com" class="info-link" style="display: flex; align-items: center;">
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+							<div>
+								<strong>Email</strong><br>
+								Yen.Chng@pmi.com
+							</div>
+						</a>
+					</div>
+					<div class="info">
+						<a href="https://www.pmi.com/" class="info-link" style="display: flex; align-items: center;">
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 12H16c-.7 2-2 3-4 3s-3.3-1-4-3H2.5"/><path d="M5.5 5.1L2 12v6c0 1.1.9 2 2 2h16a2 2 0 002-2v-6l-3.4-6.9A2 2 0 0016.8 4H7.2a2 2 0 00-1.8 1.1z"/></svg>
+							<div>
+								<strong>Philip Morris International</strong><br>
+								IT Manager Consumers MY
+							</div>
+						</a>
+					</div>
+				</div>
+				<div class="button-container">
+					<a href="https://www.linkedin.com/in/yenchng" target="_blank" class="linkedin-btn">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+						LinkedIn
+					</a>
+					<a href="/me/vcard.vcf" class="contact-btn">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+						Add Contact
+					</a>
+				</div>
+
+			</div>
+			<div class="back">
+				<img src="/images/user-3.jpg" alt="Profile Picture" class="profile-pic">
+				<h1>Yen CHNG</h1>
+				<h2>IT Manager Consumers MY</h2>
+				<div class="qr-code-container">
+					<div class="qr-code">
+						<img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://go.yenchng.com/card" alt="QR Code">
+					</div>
+				</div>
+			</div>
+        </div>
+    </div>
+    <div class="footer">
+        <p>© 2024 All Rights Reserved. Co-created by <a href="http://yenchng.com">Yen Chng</a> and <a href="https://chatgpt.com/">ChatGPT</a></p>
+    </div>
+	
+	
+	<script>
+		let card = document.querySelector('.card');
+		let front = document.querySelector('.front');
+		let startX, startY, distX, distY, threshold = 150; // Minimum distance for a swipe
+
+		card.addEventListener('touchstart', function(e) {
+			let touchObj = e.changedTouches[0];
+			startX = touchObj.pageX;
+			startY = touchObj.pageY;
+		}, false);
+
+		card.addEventListener('touchmove', function(e) {
+			e.preventDefault(); // Prevent scrolling
+		}, false);
+
+		card.addEventListener('touchend', function(e) {
+			let touchObj = e.changedTouches[0];
+			distX = touchObj.pageX - startX;
+			distY = touchObj.pageY - startY;
+
+			if (Math.abs(distX) >= threshold && Math.abs(distY) <= 100) {
+				// Swipe left or right
+				card.classList.toggle('flip');
+				if (card.classList.contains('flip')) {
+					front.classList.add('onflip');
+				} else {
+					flipTimeout = setTimeout(() => {
+						front.classList.remove('onflip');
+					}, 150); // Delay should match the CSS transition duration
+				}
+			}
+		}, false);
+
+	</script>
+</body>
+</html>
